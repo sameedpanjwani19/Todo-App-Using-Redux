@@ -4,8 +4,8 @@ import { addTodo, removeTodo, editTodo } from '../config/reducers/todoSlice';
 
 const App = () => {
   const todoVal = useRef();
-  const [isEditing, setIsEditing] = useState(false);  
-  const [currentIndex, setCurrentIndex] = useState(null);  
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -21,15 +21,14 @@ const App = () => {
           index: currentIndex,
           title: todoText
         }));
-        setIsEditing(false);  
-        setCurrentIndex(null); 
+        setIsEditing(false);
+        setCurrentIndex(null);
       } else {
-        
         dispatch(addTodo({
           title: todoText
         }));
       }
-      todoVal.current.value = "";  
+      todoVal.current.value = "";
     }
   };
 
@@ -38,31 +37,49 @@ const App = () => {
   };
 
   const editItemRedux = (index, title) => {
-    todoVal.current.value = title;  // Populate input field with current value
-    setIsEditing(true);  // Set edit mode to true
-    setCurrentIndex(index);  // Set the index of the todo being edited
+    todoVal.current.value = title;
+    setIsEditing(true);
+    setCurrentIndex(index);
   };
 
   return (
-    <>
-      <form onSubmit={todoSubmit}>
-        <input type="text" ref={todoVal} placeholder={isEditing ? "Edit Todo" : "Add Todo"} />
-        <button type="submit">{isEditing ? "Update Todo" : "Add Todo"}</button>
+    <div className="container mt-5">
+      <form onSubmit={todoSubmit} className="mb-4">
+        <div className="input-group">
+          <input
+            type="text"
+            ref={todoVal}
+            className="form-control"
+            placeholder={isEditing ? "Edit Todo" : "Add Todo"}
+          />
+          <div className="input-group-append">
+            <button type="submit" className="btn btn-primary">
+              {isEditing ? "Update Todo" : "Add Todo"}
+            </button>
+          </div>
+        </div>
       </form>
-      <ul>
+
+      <ul className="list-group">
         {selector.length > 0 ? (
           selector.map((item, index) => (
-            <li key={item.id}>
+            <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
               {item.title}
-              <button onClick={() => editItemRedux(index, item.title)}>Edit</button>
-              <button onClick={() => deleteItemRedux(index)}>Delete</button>
+              <div className="w-25 d-flex justify-content-around ">
+                <button onClick={() => editItemRedux(index, item.title)} className="btn btn-warning btn-sm mr-5 ">
+                  Edit
+                </button>
+                <button onClick={() => deleteItemRedux(index)} className="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </div>
             </li>
           ))
         ) : (
           <h1>No data found</h1>
         )}
       </ul>
-    </>
+    </div>
   );
 };
 
